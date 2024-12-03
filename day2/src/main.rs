@@ -37,7 +37,7 @@ fn part_two(input: &str) -> i32 {
             .collect::<Vec<i32>>();
 
         for i in 0..levels.len() {
-            // Create a new slice without the `i`-th element
+            // yes I know this is n^2 but I don't care
             let filtered_levels: Vec<_> = levels
                 .iter()
                 .enumerate()
