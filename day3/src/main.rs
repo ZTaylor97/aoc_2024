@@ -16,7 +16,27 @@ fn part_one(input: &str) -> i32 {
         .sum()
 }
 fn part_two(input: &str) -> i32 {
-    0
+    let regex = r"(don't|do)|mul\((?<first>\d{1,3}),(?<second>\d{1,3})\)";
+    let re = Regex::new(&regex).expect("invalid regex");
+    let mut sum = 0;
+    let mut enable = true;
+    for mtch in re.captures_iter(input) {
+        if let Some(matched) = mtch.get(1) {
+            println!("found {}", matched.as_str());
+            match matched.as_str() {
+                "don't" => enable = false,
+                "do" => enable = true,
+                _ => unreachable!("You fucked up"),
+            }
+        } else if let (Some(first), Some(second)) = (mtch.name("first"), mtch.name("second")) {
+            if enable {
+                sum +=
+                    first.as_str().parse::<i32>().unwrap() * second.as_str().parse::<i32>().unwrap()
+            }
+        }
+    }
+
+    sum
 }
 
 #[cfg(test)]
