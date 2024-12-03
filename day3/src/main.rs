@@ -11,25 +11,12 @@ fn main() {
 fn part_one(input: &str) -> i32 {
     let regex = r"mul\((?<first>\d{1,3}),(?<second>\d{1,3})\)";
     let re = Regex::new(&regex).expect("invalid regex");
-    let mut sum = 0;
-    for mtch in re.captures_iter(input) {
-        let first: i32 = mtch["first"].parse().unwrap();
-        let second: i32 = mtch["second"].parse().unwrap();
-        sum += first * second;
-    }
-    sum
+    re.captures_iter(input)
+        .map(|mtch| mtch["first"].parse::<i32>().unwrap() * mtch["second"].parse::<i32>().unwrap())
+        .sum()
 }
 fn part_two(input: &str) -> i32 {
-    let regex = r"mul\((?<first>\d{1,3}),(?<second>\d{1,3})\)";
-    let re = Regex::new(&regex).expect("invalid regex");
-    let mut sum = 0;
-    
-    for mtch in re.captures_iter(input) {
-        let first: i32 = mtch["first"].parse().unwrap();
-        let second: i32 = mtch["second"].parse().unwrap();
-        sum += first * second;
-    }
-    sum
+    0
 }
 
 #[cfg(test)]
