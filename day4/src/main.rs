@@ -63,8 +63,6 @@ fn search_two(grid: &Vec<Vec<char>>, row: i32, col: i32, word: &str) -> u32 {
         return 0;
     }
 
-    let word_vec: Vec<char> = word.chars().collect();
-
     let directions: Vec<(i32, i32)> = vec![
         (-1, -1), // Up-Left
         (-1, 1),  // Up-Right
@@ -72,53 +70,15 @@ fn search_two(grid: &Vec<Vec<char>>, row: i32, col: i32, word: &str) -> u32 {
         (1, 1),   // Down-Right
     ];
 
-    println!(
-        "{},.,{}",
-        grid[row as usize - 1][col as usize - 1],
-        grid[row as usize + 1][col as usize]
-    );
-    println!(
-        "{},{},{}",
-        grid[row as usize - 1][col as usize],
-        grid[row as usize][col as usize],
-        grid[row as usize + 1][col as usize]
-    );
-    println!(
-        "{},.,{}",
-        grid[row as usize + 1][col as usize - 1],
-        grid[row as usize + 1][col as usize + 1]
-    );
-
     let cases = vec!["MMSS", "MSMS", "SSMM", "SMSM"];
 
     for case in cases {
         let result = directions
             .iter()
-            .map(|(y, x)| grid[(row + *x) as usize][(row + *y) as usize])
+            .map(|(x, y)| grid[(row + *x) as usize][(col + *y) as usize])
             .collect::<String>();
 
-        print!("{result}\n");
-
         if result == case {
-            println!(
-                "{},{},{}",
-                grid[row as usize - 1][col as usize - 1],
-                grid[row as usize - 1][col as usize],
-                grid[row as usize - 1][col as usize + 1]
-            );
-            println!(
-                "{},{},{}",
-                grid[row as usize][col as usize - 1],
-                grid[row as usize][col as usize],
-                grid[row as usize][col as usize + 1]
-            );
-            println!(
-                "{},{},{}",
-                grid[row as usize + 1][col as usize - 1],
-                grid[row as usize + 1][col as usize],
-                grid[row as usize + 1][col as usize + 1]
-            );
-            println!("This one worked!");
             return 1;
         }
     }
@@ -129,8 +89,6 @@ fn search_two(grid: &Vec<Vec<char>>, row: i32, col: i32, word: &str) -> u32 {
 fn part_one(input: &str) -> i32 {
     let word = "XMAS";
     let grid: Vec<Vec<char>> = input.lines().map(|line| line.chars().collect()).collect();
-
-    println!("{grid:?}");
 
     let rows = grid.len();
     let cols = grid[0].len();
@@ -150,8 +108,6 @@ fn part_one(input: &str) -> i32 {
 fn part_two(input: &str) -> i32 {
     let word = "XMAS";
     let grid: Vec<Vec<char>> = input.lines().map(|line| line.chars().collect()).collect();
-
-    println!("{grid:?}");
 
     let rows = grid.len();
     let cols = grid[0].len();
