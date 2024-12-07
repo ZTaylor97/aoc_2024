@@ -69,8 +69,39 @@ fn search_one(page: &[i32], rules: &BTreeMap<i32, Vec<i32>>) -> Option<i32> {
     return Some(page[(page.len() as f32 / 2.0_f32).floor() as usize]);
 }
 
-fn search_two(mut numbers: Vec<i32>, rules: &BTreeMap<i32, Vec<i32>>) -> Option<i32> {
-    None
+fn search_two(mut page: Vec<i32>, rules: &BTreeMap<i32, Vec<i32>>) -> Option<i32> {
+    let mut modified = false;
+    'outer: loop {
+        let mut incorrect = false;
+        // for each element
+        for i in 0..page.len() {
+            // check every preceding element
+            for j in 0..i {
+                if let Some(rule) = rules.get(&(page[i] as i32)) {
+                    if rule.contains(&page[j]) {
+                        incorrect = true;
+                        modified = true;
+                        let temp_element = page[i];
+                        let temp_incorrect = page[j];
+
+                        page[j] = temp_element;
+                        page[i] = temp_incorrect;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if !incorrect {
+            break 'outer;
+        }
+    }
+
+    if !modified {
+        return None;
+    } else {
+        Some(page[(page.len() as f32 / 2.0_f32).floor() as usize])
+    }
 }
 
 fn part_two(raw_rules: &str, raw_pages: &str) -> i32 {
