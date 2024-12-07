@@ -1,4 +1,4 @@
-use std::{fs, ops::RemAssign};
+use std::fs;
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 enum CellTypes {
@@ -48,15 +48,6 @@ impl Direction {
             Self::Left => *self = Self::Up,
         }
     }
-
-    fn is_left_of(&self, other: &Self) -> bool {
-        match other {
-            Self::Up => self == &Self::Left,
-            Self::Right => self == &Self::Up,
-            Self::Down => self == &Self::Right,
-            Self::Left => self == &Self::Down,
-        }
-    }
 }
 
 fn main() {
@@ -90,8 +81,6 @@ fn part_one(input: &str) -> i32 {
         }
     }
 
-    // println!("{}", debug_grid(&occupied_map));
-
     occupied_map
         .iter()
         .flat_map(|inner| inner.iter())
@@ -123,7 +112,7 @@ fn init_state(input: &str) -> (Point, Direction, Vec<Vec<CellTypes>>) {
         .collect();
     (pos, direction, map)
 }
-fn debug_grid(grid: &[Vec<bool>]) -> String {
+fn _debug_grid(grid: &[Vec<bool>]) -> String {
     grid.iter()
         .map(|row| {
             row.iter()
@@ -142,7 +131,6 @@ fn part_two(input: &str) -> i32 {
 
     for i in 0..map.len() {
         for j in 0..map[0].len() {
-            println!("{i}, {j}");
             let mut direction = initial_direction.clone();
             let mut pos = initital_pos.clone();
             let mut num_moves = 0;
@@ -198,20 +186,12 @@ mod tests {
 #.........
 ......#...";
 
-    // #[test]
-    // fn test_part_one() {
-    //     assert_eq!(part_one(TEST_INPUT), 41)
-    // }
+    #[test]
+    fn test_part_one() {
+        assert_eq!(part_one(TEST_INPUT), 41)
+    }
     #[test]
     fn test_part_two() {
         assert_eq!(part_two(TEST_INPUT), 6)
     }
-
-    // #[test]
-    // fn test_is_left() {
-    //     let current_dir = Direction::Left;
-    //     let other_dir = Direction::Up;
-
-    //     assert!(current_dir.is_left_of(&other_dir));
-    // }
 }
