@@ -1,4 +1,4 @@
-use std::fs;
+use std::{collections::HashSet, fs};
 
 fn main() {
     let contents = fs::read_to_string("input.txt").expect("Error loading file");
@@ -9,10 +9,23 @@ fn main() {
 #[derive(Debug)]
 struct Equation {
     answer: u64,
-    operands: Vec<u32>,
+    operands: Vec<u64>,
 }
 
-fn part_one(input: &str) -> i32 {
+fn part_one(input: &str) -> u64 {
+    let equations = parse_input(input);
+
+    equations.iter().map(|eq| {
+        let combos = compute_all_combinations(&eq.operands, Part::One);
+        if let Some(_) = combos.get(&eq.answer) {
+            eq.answer
+        } else {
+            0
+        }
+    }).sum()
+}
+
+fn parse_input(input: &str) -> Vec<Equation> {
     let equations: Vec<Equation> = input
         .lines()
         .map(|line| {
@@ -22,22 +35,68 @@ fn part_one(input: &str) -> i32 {
                 .next()
                 .unwrap()
                 .split(' ')
-                .map(|ops_split| ops_split.parse::<u32>().unwrap())
-                .collect::<Vec<u32>>();
+                .map(|ops_split| ops_split.parse::<u64>().unwrap())
+                .collect::<Vec<u64>>();
 
             Equation { answer, operands }
         })
         .collect();
-
-    for equation in equations {
-        
-    }
-
-    0
+    equations
 }
 
-fn part_two(input: &str) -> i32 {
-    0
+enum Part {
+    One,
+    Two,
+}
+
+fn compute_all_combinations(nums: &[u64], part: Part) -> HashSet<u64> {
+    let mut results = HashSet::new();
+
+    match part {
+        Part::One => compute_combinations_recursive_one(&nums[1..], nums[0], &mut results),
+        Part::Two => compute_combinations_recursive_two(&nums[1..], nums[0], &mut results),
+    }
+    results
+}
+fn compute_combinations_recursive_one(nums: &[u64], current: u64, results: &mut HashSet<u64>) {
+    // base case
+    if nums.is_empty() {
+        results.insert(current);
+        return;
+    }
+    let next = nums[0];
+    let rest = &nums[1..];
+
+    compute_combinations_recursive_one(rest, current + next, results);
+    compute_combinations_recursive_one(rest, current * next, results);
+}
+fn compute_combinations_recursive_two(nums: &[u64], current: u64, results: &mut HashSet<u64>) {
+    // base case
+    if nums.is_empty() {
+        results.insert(current);
+        return;
+    }
+
+    let next = nums[0];
+    let rest = &nums[1..];
+
+    compute_combinations_recursive_two(rest, current + next, results);
+    compute_combinations_recursive_two(rest, current * next, results);
+    let str = current.to_string() + next.to_string().as_str();
+    compute_combinations_recursive_two(rest, str.parse().unwrap(), results);
+}
+
+fn part_two(input: &str) -> u64 {
+    let equations = parse_input(input);
+
+    equations.iter().map(|eq| {
+        let combos = compute_all_combinations(&eq.operands, Part::Two);
+        if let Some(_) = combos.get(&eq.answer) {
+            eq.answer
+        } else {
+            0
+        }
+    }).sum()
 }
 
 #[cfg(test)]
@@ -60,6 +119,6 @@ mod tests {
     }
     #[test]
     fn test_part_two() {
-        assert_eq!(part_two(TEST_INPUT), 6)
+        assert_eq!(part_two(TEST_INPUT), 11387)
     }
 }
