@@ -54,9 +54,8 @@ fn part_one(raw_rules: &str, raw_pages: &str) -> i32 {
 }
 
 fn search_one(page: &[i32], rules: &BTreeMap<i32, Vec<i32>>) -> Option<i32> {
-    // for each element
     for i in 0..page.len() {
-        // check every following element
+        // check every preceding element
         for j in 0..i {
             if let Some(rule) = rules.get(&(page[i] as i32)) {
                 if rule.contains(&page[j]) {
@@ -72,10 +71,10 @@ fn search_one(page: &[i32], rules: &BTreeMap<i32, Vec<i32>>) -> Option<i32> {
 fn search_two(mut page: Vec<i32>, rules: &BTreeMap<i32, Vec<i32>>) -> Option<i32> {
     let mut modified = false;
     'outer: loop {
+        // Stop looping when this flag is not set
         let mut incorrect = false;
-        // for each element
+        // check every preceding element
         for i in 0..page.len() {
-            // check every preceding element
             for j in 0..i {
                 if let Some(rule) = rules.get(&(page[i] as i32)) {
                     if rule.contains(&page[j]) {
