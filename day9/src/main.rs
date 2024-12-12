@@ -97,10 +97,31 @@ fn part_two(input: &str) -> u64 {
 
     filesystem.push(FileType::File(i, rem));
 
+    let mut filesystem_mod: Vec<FileType> = Vec::new();
+
     println!("{filesystem:?}");
 
-    for file in filesystem.into_iter().rev() {
-        
+    // for each number from the end
+
+    for i in (0..filesystem.len()).rev() {
+        if let FileType::File(idx, file_size) = filesystem[i] {
+            // look for an empty spot starting from the front
+            for j in 0..i {
+                if let FileType::Empty(empty_size) = filesystem[j] {
+                    let diff: i32 = empty_size as i32 - file_size as i32;
+
+                    // if there is space
+                    if diff >= 0 {
+                        filesystem[j] = filesystem[i];
+                        filesystem[i] = 
+                    }
+                    if diff > 0 {
+                        // Insert empty space here
+
+                    }
+                }
+            }
+        }
     }
 
     0
